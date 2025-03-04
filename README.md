@@ -86,9 +86,9 @@ python distilled-bert.py --teacher_model ./models/teacher --output_dir ./models/
 
 - 從教師模型 (bert-large-uncased) 輸出 logits，經由「溫度參數」$T$ 進行縮放，計算出軟標籤。
 - 公式：
-  ```math
+  $$
   p_{teacher}(y \mid x) = \mathrm{softmax}\left(\frac{z_{teacher}}{T}\right)
-  ```
+  $$
   其中 $z_{teacher}$ 為教師模型 logits。
 - 當 $T>1$，分布更平滑，學生模型可學習更細微的資訊。
 
@@ -97,17 +97,17 @@ python distilled-bert.py --teacher_model ./models/teacher --output_dir ./models/
 - 學生模型 (bert-base-uncased) 產生 logits，同樣使用溫度 $T$ 產生軟標籤。
 - 與教師的軟標籤透過 KL 散度 (Kullback-Leibler Divergence) 進行對齊。
 - 目標為最小化：
-  ```math
+  $$
   L_{KL} = \sum_y p_{teacher}(y \mid x) \log \frac{p_{teacher}(y \mid x)}{p_{student}(y \mid x)}
-  ```
+  $$
 
 ### 3. **硬標籤 (Hard Label) 交叉熵損失**
 
 - 學生模型同時學習原始資料的真實標籤 (0/1)。
 - 損失函數結合軟標籤和硬標籤：
-  ```math
+  $$
   L_{total} = \alpha \cdot L_{KL} + (1 - \alpha) \cdot L_{CE}
-  ```
+  $$
   其中 $L_{CE}$ 是交叉熵損失。
 
 ---
